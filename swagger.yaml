@@ -1,0 +1,164 @@
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0.0"
+  title: "API Documentation Alta Store"
+  termsOfService: ""
+  contact:
+    email: ""
+host: ""
+basePath: "/v1"
+consumes: [application/json]
+produces: [application/json]
+schemes:
+- "https"
+- "http"
+
+# tags are used for organizing operations
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: customers
+  description: Operations available to regular customers
+
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+
+paths:
+  /login:
+    post:
+      description: 'Returns token for authorized User'
+      tags: [customers]
+      operationId: Login
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'login'
+          in: 'body'
+          required: true
+          description: 'Login Payload'
+          schema:
+            $ref: '#/definitions/LoginInfo'
+      responses:
+        200:
+          description: Successful login
+          schema:
+            $ref: '#/definitions/LoginSuccess'
+        400:
+          description: Bad Request
+        404:
+          schema:
+            type: string
+          description: User not found
+        500:
+          schema:
+            type: string
+          description: Server error
+  /register:
+    post:
+      description: 'Register customer to access Alta Store'
+      tags: [customers]
+      operationId: Register User
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'register'
+          in: 'body'
+          required: true
+          description: 'Register Payload'
+          schema:
+            $ref: '#/definitions/RegisterInfo'
+      responses:
+        200:
+          description: Successful register user
+          schema:
+            $ref: '#/definitions/RegisterSuccess'
+        400:
+          description: Bad Request
+        404:
+          schema:
+            type: string
+          description: Page not found
+        500:
+          schema:
+            type: string
+          description: Server error
+  /put:
+    put:
+      description: 'Edit profile customers'
+      tags: [customers]
+      operationId: Edit profile customers
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          description: 'Id customer for update profile'
+          type: integer
+        - in: "body"
+          name: "body"
+          description: "Updated customer object"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        200:
+          description: Successful update profile customers
+          schema:
+            $ref: '#/definitions/UpdateProfileSuccess'
+        400:
+          description: Invalid Id customers
+        404:
+          schema:
+            type: string
+          description: Customer not found
+        500:
+          schema:
+            type: string
+          description: Server error
+definitions:
+  LoginInfo:
+    type: object
+    required: [email,password]
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  LoginSuccess:
+    type: object
+    properties:
+      success:
+        type: boolean
+      token:
+        type: string
+  RegisterInfo:
+    type: object
+    required: [username,email,password,confrim_password]
+    properties:
+      username:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      confrim_password:
+        type: string
+  RegisterSuccess:
+    type: object
+    properties:
+      success:
+        type: boolean
+      token:
+        type: string
+  UpdateSuccess:
+    type: object
+    properties:
+      success:
+        type: boolean
+      token:
+        type: string
