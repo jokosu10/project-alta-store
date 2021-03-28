@@ -5,7 +5,7 @@ import (
 )
 
 type Payments struct{
-	ID        int `gorm:"type:bigint(20);primarykey" json:"id"` 
+	ID        int `gorm:"type:bigint(20);primarykey;AUTO_INCREMENT" json:"id"` 
 	Order_id int  `gorm:"type:bigint(20);foreignkey;not null" json:"order_id"` 
 	Payment_method string `gorm:"type:varchar(255);not null" json:"payment_method"`
 	Payment_start_date time.Time `gorm:"not null" json:"payment_start_date"`
