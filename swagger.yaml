@@ -210,7 +210,7 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/DefaultCode500'
-  /products/{categories_id}:
+  /products/{categoriesId}:
     get:
       description: 'Get list all products by categories id'
       tags: [customers]
@@ -258,6 +258,191 @@ paths:
             $ref: '#/definitions/DefaultCode400'
         404:
           description: product not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /checkoutitems/{orderId}:
+    get:
+      description: 'Get checkout items by order id'
+      tags: [customers]
+      operationId: Get checkout items by order id
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'orderId'
+          in: 'path'
+          required: true
+          description: 'order id customer for update profile'
+          type: integer
+      responses:
+        200:
+          description: Successful get list all couriers
+          schema:
+            $ref: '#/definitions/CheckoutItemsByOrderId'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: product not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /carts/{cartId}:
+    put:
+      description: 'Edit status cart customers'
+      tags: [customers]
+      operationId: Edit status cart customers
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          description: 'Id carts customer'
+          type: integer
+        - in: "body"
+          name: "body"
+          description: "Updated status cart customer"
+          required: true
+          schema:
+            $ref: "#/definitions/CartsCustomersid"
+      responses:
+        200:
+          description: Successful update status carts customers
+          schema:
+            $ref: '#/definitions/CustomersPasswordInfoSuccess'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: Carts not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /cartitems:
+    post:
+      description: 'add items to carts'
+      tags: [customers]
+      operationId: add items to carts
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'cartitems'
+          in: 'body'
+          required: true
+          description: 'cartitems Payload'
+          schema:
+            $ref: '#/definitions/CartitemsInfo'
+      responses:
+        200:
+          description: Successful add items to carts
+          schema:
+            $ref: '#/definitions/CartitemsInfoSuccess'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: Customer not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+    get:
+      description: 'get all carts items in carts customers'
+      tags: [customers]
+      operationId: get all carts items in carts customers
+      consumes:
+        - "application/json"
+      responses:
+        200:
+          description: get all carts items in carts customers
+          schema:
+            $ref: '#/definitions/CartitemsAll'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: Cart items not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /cartitems/{cartitemsId}:
+    delete:
+      description: 'delete carts items in carts'
+      tags: [customers]
+      operationId: delete carts items in carts
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          description: 'Id carts items'
+          type: integer
+      responses:
+        200:
+          description: Successful delete carts items in carts
+          schema:
+            $ref: '#/definitions/CartitemsDeleteSuccess'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: Cart items not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+    put:
+      description: 'edit quantity carts items in carts'
+      tags: [customers]
+      operationId: edit quantity carts items in carts
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          description: 'Id carts items'
+          type: integer
+        - in: "body"
+          name: "body"
+          description: "Updated quantity carts items in carts"
+          required: true
+          schema:
+            $ref: "#/definitions/CartsItemsUpdateInfo"
+      responses:
+        200:
+          description: Successful update quantity carts items in carts
+          schema:
+            $ref: '#/definitions/CartitemsInfoSuccess'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: Cart items not found
           schema:
             $ref: '#/definitions/DefaultCode404'
         500:
@@ -487,3 +672,100 @@ definitions:
             type: integer
           name:
             type: string
+  CheckoutItemsByOrderId:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          id:
+            type: integer
+          product_id:
+            type: integer
+          quantity:
+            type: integer
+  CartsCustomersid:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          status:
+            type: status
+  CartitemsInfo:
+    type: object
+    required: [cart_id,product_id,quantity]
+    properties:
+      cart_id:
+        type: integer
+      product_id:
+        type: integer
+      quantity:
+        type: integer
+  CartitemsInfoSuccess:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          cart_id:
+            type: integer
+          product_id:
+            type: integer
+          quantity:
+            type: integer
+  CartitemsDeleteSuccess:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+  CartsItemsUpdateInfo:
+    type: object
+    required: [quantity]
+    properties:
+      quantity:
+        type: integer
+  CartitemsAll:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          id:
+            type: integer
+          cart_id:
+            type: integer
+          product_id:
+            type: integer
+          quantity:
+            type: integer
