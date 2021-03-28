@@ -11,8 +11,8 @@ basePath: "/v1"
 consumes: [application/json]
 produces: [application/json]
 schemes:
-- "https"
 - "http"
+- "https"
 
 # tags are used for organizing operations
 tags:
@@ -30,9 +30,9 @@ securityDefinitions:
 paths:
   /login:
     post:
-      description: 'Returns token for authorized User'
+      description: 'login customer to access Alta Store return token data'
       tags: [customers]
-      operationId: Login
+      operationId: login customer
       consumes:
         - "application/json"
       parameters:
@@ -44,31 +44,33 @@ paths:
             $ref: '#/definitions/LoginInfo'
       responses:
         200:
-          description: Successful login
+          description: Successful customers login
           schema:
             $ref: '#/definitions/LoginSuccess'
         400:
           description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
         404:
+          description: Customer not found
           schema:
-            type: string
-          description: User not found
+            $ref: '#/definitions/DefaultCode404'
         500:
-          schema:
-            type: string
           description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
   /register:
     post:
       description: 'Register customer to access Alta Store'
       tags: [customers]
-      operationId: Register User
+      operationId: Register customers
       consumes:
         - "application/json"
       parameters:
         - name: 'register'
           in: 'body'
           required: true
-          description: 'Register Payload'
+          description: 'Register customer payload'
           schema:
             $ref: '#/definitions/RegisterInfo'
       responses:
@@ -78,15 +80,17 @@ paths:
             $ref: '#/definitions/RegisterSuccess'
         400:
           description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
         404:
+          description: User not found
           schema:
-            type: string
-          description: Page not found
+            $ref: '#/definitions/DefaultCode404'
         500:
-          schema:
-            type: string
           description: Server error
-  /put:
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /customers/{customerId}:
     put:
       description: 'Edit profile customers'
       tags: [customers]
@@ -104,23 +108,196 @@ paths:
           description: "Updated customer object"
           required: true
           schema:
-            $ref: "#/definitions/User"
+            $ref: "#/definitions/CustomersInfo"
       responses:
         200:
           description: Successful update profile customers
           schema:
-            $ref: '#/definitions/UpdateProfileSuccess'
+            $ref: '#/definitions/CustomersInfoUpdateProfileSuccess'
         400:
-          description: Invalid Id customers
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
         404:
-          schema:
-            type: string
           description: Customer not found
-        500:
           schema:
-            type: string
+            $ref: '#/definitions/DefaultCode404'
+        500:
           description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /customers/password/{customerId}:
+    put:
+      description: 'Edit password customers'
+      tags: [customers]
+      operationId: Edit password customers
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          description: 'Id customer for update profile'
+          type: integer
+        - in: "body"
+          name: "body"
+          description: "Updated customer object"
+          required: true
+          schema:
+            $ref: "#/definitions/CustomersPasswordInfo"
+      responses:
+        200:
+          description: Successful update password customers
+          schema:
+            $ref: '#/definitions/CustomersPasswordInfoSuccess'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: Customer not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /categories:
+    get:
+      description: 'Get list all categories'
+      tags: [customers]
+      operationId: Get list all categories product
+      consumes:
+        - "application/json"
+      responses:
+        200:
+          description: Successful get list all categories product
+          schema:
+            $ref: '#/definitions/CategoriesAll'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: product not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /products:
+    get:
+      description: 'Get list all products'
+      tags: [customers]
+      operationId: Get list all product
+      consumes:
+        - "application/json"
+      responses:
+        200:
+          description: Successful get list all product
+          schema:
+            $ref: '#/definitions/ProductsAll'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: product not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /products/{categories_id}:
+    get:
+      description: 'Get list all products by categories id'
+      tags: [customers]
+      operationId: Get list all products by categories id
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          description: 'Id categories for Get list all products by categories id'
+          type: integer
+      responses:
+        200:
+          description: Successful get list all product by categories id
+          schema:
+            $ref: '#/definitions/ProductsAllByCategoriesId'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: product not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /couriers:
+    get:
+      description: 'Get list all couriers'
+      tags: [customers]
+      operationId: Get list all couriers
+      consumes:
+        - "application/json"
+      responses:
+        200:
+          description: Successful get list all couriers
+          schema:
+            $ref: '#/definitions/CouriersAll'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: product not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
 definitions:
+  DefaultCode400:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+  DefaultCode404:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+  DefaultCode500:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
   LoginInfo:
     type: object
     required: [email,password]
@@ -132,10 +309,21 @@ definitions:
   LoginSuccess:
     type: object
     properties:
-      success:
-        type: boolean
-      token:
+      code:
+        type: integer
+      message:
         type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          token:
+            type: string
+          refreshToken:
+            type: string
+          expiredAt:
+            type: string
   RegisterInfo:
     type: object
     required: [username,email,password,confrim_password]
@@ -151,14 +339,151 @@ definitions:
   RegisterSuccess:
     type: object
     properties:
-      success:
-        type: boolean
-      token:
+      code:
+        type: integer
+      message:
         type: string
-  UpdateSuccess:
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+  CustomersInfo:
+    type: object
+    required: [province,city,address,zipcode,bank_name,bank_account_number]
+    properties:
+      province:
+        type: string
+      city:
+        type: string
+      address:
+        type: string
+      zipcode:
+        type: integer
+      bank_name:
+        type: string
+      bank_account_number:
+        type: integer
+  CustomersInfoUpdateProfileSuccess:
     type: object
     properties:
-      success:
-        type: boolean
-      token:
+      code:
+        type: integer
+      message:
         type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          province:
+            type: string
+          city:
+            type: string
+          address:
+            type: string
+          zipcode:
+            type: integer
+          bank_name:
+            type: string
+          bank_account_number:
+            type: integer
+  CustomersPasswordInfo:
+    type: object
+    required: [new_password, old_password]
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+  CustomersPasswordInfoSuccess:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+  CategoriesAll:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+  ProductsAll:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          categories_id:
+            type: integer
+          name:
+            type: string
+          description:
+            type: string
+          quantity:
+            type: integer
+          price:
+            type: integer
+          unit:
+            type: string
+  ProductsAllByCategoriesId:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          categories_id:
+            type: integer
+          name:
+            type: string
+          description:
+            type: string
+          quantity:
+            type: integer
+          price:
+            type: integer
+          unit:
+            type: string
+  CouriersAll:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
