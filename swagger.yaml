@@ -449,6 +449,97 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/DefaultCode500'
+  /orders:
+    post:
+      description: 'Customer add order and add payment'
+      tags: [customers]
+      operationId: Customer add order and add payment
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'orders'
+          in: 'body'
+          required: true
+          description: 'orders payload'
+          schema:
+            $ref: '#/definitions/OrdersInfo'
+      responses:
+        200:
+          description: Successful add order and add payment
+          schema:
+            $ref: '#/definitions/OrdersInfoSuccess'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: Order and payment not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /orders/{orderId}:
+    get:
+      description: 'get detail orders by id'
+      tags: [customers]
+      operationId: get detail orders by id
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          description: 'Id orders'
+          type: integer
+      responses:
+        200:
+          description: Successful get detail orders by id
+          schema:
+            $ref: '#/definitions/OrdersDetailSuccess'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: User not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
+  /payments/{paymentsId}:
+    get:
+      description: 'get detail payments by id'
+      tags: [customers]
+      operationId: get detail payments by id
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          description: 'Id payments'
+          type: integer
+      responses:
+        200:
+          description: Successful get detail payments by id
+          schema:
+            $ref: '#/definitions/PaymentsDetailSuccess'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/DefaultCode400'
+        404:
+          description: User not found
+          schema:
+            $ref: '#/definitions/DefaultCode404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/DefaultCode500'
 definitions:
   DefaultCode400:
     type: object
@@ -768,4 +859,106 @@ definitions:
           product_id:
             type: integer
           quantity:
+            type: integer
+  OrdersInfo:
+    type: object
+    required: [customers_id,courier_id,payment_method,payment_start_date,payment_end_date,payment_status,payment_amount]
+    properties:
+      customers_id:
+        type: integer
+      courier_id:
+        type: integer
+      payment_method:
+        type: string
+      payment_start_date:
+        type: string
+        format: date-time
+        example: "2021-02-11 10:00:00"
+      payment_end_date:
+        type: string
+        format: date-time
+        example: "2021-02-11 11:00:00"
+      payment_status:
+        type: string
+      payment_amount:
+        type: integer
+  OrdersInfoSuccess:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          customers_id:
+            type: integer
+          courier_id:
+            type: integer
+          payment_method:
+            type: string
+          payment_start_date:
+            type: string
+            format: date-time
+            example: "2021-02-11 10:00:00"
+          payment_end_date:
+            type: string
+            format: date-time
+            example: "2021-02-11 11:00:00"
+          payment_status:
+            type: string
+          payment_amount:
+            type: integer
+  OrdersDetailSuccess:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          id:
+            type: integer
+          customer_id:
+            type: integer
+          couriers_id:
+            type: integer
+          address:
+            type: string
+  PaymentsDetailSuccess:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+      data:
+        type: object
+        properties:
+          id:
+            type: integer
+          orders_id:
+            type: integer
+          payment_method:
+            type: string
+          payment_start_date:
+            type: string
+            format: date-time
+            example: "2021-02-11 10:00:00"
+          payment_end_date:
+            type: string
+            format: date-time
+            example: "2021-02-11 11:00:00"
+          payment_status:
+            type: string
+          payment_amount:
             type: integer
