@@ -7,9 +7,9 @@ import (
 
 type Customers struct{
 	ID        int `gorm:"type:bigint(20);primarykey" json:"id"` 
-	Username string `gorm:"type:varchar(255);unique" json:"username"`
-	Email string `gorm:"type:varchar(30);unique" json:"email"`
-	Password string `gorm:"type:varchar(30);" json:"password"`
+	Username string `gorm:"type:varchar(255);unique;not null" json:"username"`
+	Email string `gorm:"type:varchar(30);unique;not null" json:"email"`
+	Password string `gorm:"type:varchar(30);not null" json:"password"`
 	Province string `gorm:"type:varchar(255);" json:"province"`
 	City string `gorm:"type:varchar(255);" json:"city"`
 	Address string `gorm:"type:varchar(255);" json:"address"`
