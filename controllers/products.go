@@ -1,11 +1,10 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"project-alta-store/lib/database"
 	"project-alta-store/models"
-	"strconv"
+
 
 	"github.com/labstack/echo"
 )
