@@ -33,7 +33,8 @@ func Start() *echo.Echo {
 	e.PUT("/carts/:id",controllers.UpdateCartsController)
 
 	// route auth
-	e.POST("/register", controllers.RegisterUserController)
+	e.POST("/register", controllers.RegisterCustomersController)
+	e.POST("/login", controllers.LoginCustomersController)
 
 	return e
 }

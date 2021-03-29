@@ -9,13 +9,23 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func RegisterUserController(c echo.Context) error {
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+
+func RegisterCustomersController(c echo.Context) error {
 	var customerModel models.Customers_register
 
 	if e := c.Bind(&customerModel); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"message": "Fail insert data",
+			"message": "Error registration customers",
 			"status":  e.Error(),
 		})
 	}
@@ -24,18 +34,18 @@ func RegisterUserController(c echo.Context) error {
 	if e := models.Validate.Struct(customerModel); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"message": "Error registration user",
+			"message": "Error registration customers",
 			"status":  e.Error(),
 		})
 	}
 
 	// Generate "hash" to store from user password
-	hash, _ := bcrypt.GenerateFromPassword([]byte(customerModel.Password), bcrypt.DefaultCost)
+	// hash, _ := HashPassword(customerModel.Password)
 
 	var customer models.Customers
 	customer.Username = customerModel.Username
 	customer.Email = customerModel.Email
-	customer.Password = string(hash)
+	customer.Password = customerModel.Password
 
 	_, err := database.InsertCustomers(customer)
 
@@ -43,7 +53,7 @@ func RegisterUserController(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
 			"code":    500,
-			"message": "Error registration user",
+			"message": "Error registration customers",
 			"status":  err.Error(),
 		})
 	}
@@ -66,7 +76,20 @@ func RegisterUserController(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    200,
-		"message": "success register user",
+		"message": "success register customers",
 		"status":  "success",
+	})
+}
+
+func LoginCustomersController(c echo.Context) error {
+	var customerLogin models.Customers
+	c.Bind(&customerLogin)
+	customer, _ := database.LoginCustomers(customerLogin)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    200,
+		"message": "success login customer",
+		"status":  "success",
+		"data":    customer,
 	})
 }
