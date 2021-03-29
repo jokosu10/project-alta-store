@@ -13,6 +13,15 @@ func InsertCustomers(customer models.Customers) (interface{}, error) {
 	return customer, nil
 }
 
+
+func GetCustomersByName(name string)(models.Customers,error){
+	var customer models.Customers
+	if e:=config.DB.Where("Username = ?",name).Find(&customer).Error; e!=nil{
+		return customer,e
+	}
+	return customer,nil
+}
+
 func LoginCustomers(customer models.Customers) (interface{}, error) {
 	var err error
 
@@ -30,3 +39,4 @@ func LoginCustomers(customer models.Customers) (interface{}, error) {
 	}
 	return customer, nil
 }
+

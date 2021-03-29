@@ -28,6 +28,10 @@ func Start() *echo.Echo {
 	e.POST("/cartitems",controllers.CreateCartitemsController)
 	e.PUT("/cartitems/:id",controllers.UpdateCartitemsController)
 	e.DELETE("/cartitems/:id",controllers.DeleteCartitemsController)
+
+	//Route Carts
+	e.PUT("/carts/:id",controllers.UpdateCartsController)
+
 	// route auth
 	e.POST("/register", controllers.RegisterCustomersController)
 	e.POST("/login", controllers.LoginCustomersController)
