@@ -9,29 +9,8 @@ import (
 	"github.com/labstack/echo"
 )
 
-
-func GetCategoriesController(c echo.Context) error {
-	categories, err := database.GetCategories()
-
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
-			"code":    400,
-			"status": "Fail",
-			"message":  err.Error(),
-		})
-	}
-
-	res := models.Categories_response{
-		Code:    200,
-		Message: "Success",
-		Status:  "Success",
-		Data:    categories,
-	}
-	return c.JSON(http.StatusOK, res)
-}
-
-func CreateCategoriesController(c echo.Context) error {
-	var post_body models.Categories_post
+func CreateCartitemsController(c echo.Context) error {
+	var post_body models.Cartitems_Post
 	// c.Bind(&post_body)
 	if e := c.Bind(&post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
@@ -48,11 +27,12 @@ func CreateCategoriesController(c echo.Context) error {
 		})
 	}
 
-	var categories models.Categories
-	categories.Name = post_body.Name
-	categories.Description = post_body.Name
+	var  cartitems models.Cartitems
+	cartitems.Carts_id = *post_body.Carts_id
+	cartitems.Products_id = *post_body.Products_id
+	cartitems.Quantity = *post_body.Quantity
 
-	_, err := database.InsertCategories(categories)
+	_, err := database.InsertCartitems(cartitems)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
 			"code":    500,
@@ -60,15 +40,55 @@ func CreateCategoriesController(c echo.Context) error {
 			"message":  err.Error(),
 		})
 	}
-	return c.JSON(http.StatusOK, models.Categories_response_single{
+	return c.JSON(http.StatusOK, models.Cartitems_response_single{
 		Code:200,
 		Status:"success",
-		Message:"success insert categories",
-		Data: categories,
+		Message:"success insert cartitems",
+		Data: cartitems,
 	})
 }
 
-func UpdateCategoriesController(c echo.Context) error {
+func GetCartitemsByCartIdController(c echo.Context) error {
+
+	id,_ := strconv.Atoi(c.Param("id"))
+
+	if !utils.StringIsNotNumber(c.Param("id")){
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status": "Fail",
+			"message":  "invalid id supplied",
+		})
+	}
+
+	cartItems, err := database.GetCartitemsByCartsId(id)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status": "fail",
+			"message":  err.Error(),
+		})
+	}
+
+	// if len(cartItems)==0{
+	// 	return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
+	// 		"code":    404,
+	// 		"status": "fail",
+	// 		"message":  "CartItems not found",
+	// 	})
+	// }
+
+	res := models.Cartitems_response{
+		Code:    200,
+		Status:  "Success",
+		Message: "Success",
+		Data:    cartItems,
+	}
+	return c.JSON(http.StatusOK, res)
+}
+
+
+func UpdateCartitemsController(c echo.Context) error {
 	id,_ := strconv.Atoi(c.Param("id"))
 	
 	if !utils.StringIsNotNumber(c.Param("id")){
@@ -78,7 +98,7 @@ func UpdateCategoriesController(c echo.Context) error {
 			"message":  "invalid id supplied",
 		})
 	}
-	var post_body models.Categories_update
+	var post_body models.Cartitems_Update
 
 	if e := c.Bind(&post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
@@ -89,7 +109,7 @@ func UpdateCategoriesController(c echo.Context) error {
 	}
 	
 
-	categories,e := database.GetCategoriesById(id)
+	cartitems,e := database.GetCartitemsById(id)
 	if  e != nil {
 		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
 			"code":    404,
@@ -97,11 +117,10 @@ func UpdateCategoriesController(c echo.Context) error {
 			"message":  e.Error(),
 		})
 	}
+
+	cartitems.Quantity = *post_body.Quantity
 	
-	categories.Name = utils.CompareStrings(categories.Name,post_body.Name)
-	categories.Description = utils.CompareStrings(categories.Description,post_body.Description)
-	
-	_, err := database.InsertCategories(categories)
+	_, err := database.InsertCartitems(cartitems)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
 			"code":    500,
@@ -112,13 +131,13 @@ func UpdateCategoriesController(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code" : 200,
 		"status" : "success",
-		"message": "success update categories ",
-		"data":    categories,
+		"message": "success update cartitems ",
+		"data":    cartitems,
 	})
 }
 
 
-func DeleteCategoriesController(c echo.Context) error {
+func DeleteCartitemsController(c echo.Context) error {
 	id,_ := strconv.Atoi(c.Param("id"))
 
 	if !utils.StringIsNotNumber(c.Param("id")){
@@ -129,7 +148,7 @@ func DeleteCategoriesController(c echo.Context) error {
 		})
 	}
 
-	err := database.DeleteCategoriesById(id)
+	err := database.DeleteCartitemsById(id)
 	if err!=nil{
 		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
 			"code":    404,
@@ -141,6 +160,6 @@ func DeleteCategoriesController(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    200,
 		"status": "success",
-		"message":  "category succesfully deleted",
+		"message":  "cartitems succesfully deleted",
 	})
 }
