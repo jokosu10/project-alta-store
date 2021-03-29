@@ -29,7 +29,8 @@ func Start() *echo.Echo {
 	e.PUT("/cartitems/:id",controllers.UpdateCartitemsController)
 	e.DELETE("/cartitems/:id",controllers.DeleteCartitemsController)
 	// route auth
-	e.POST("/register", controllers.RegisterUserController)
+	e.POST("/register", controllers.RegisterCustomersController)
+	e.POST("/login", controllers.LoginCustomersController)
 
 	return e
 }

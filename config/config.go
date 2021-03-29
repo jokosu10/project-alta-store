@@ -1,25 +1,42 @@
 package config
 
-import(
+import (
+	"fmt"
+	"project-alta-store/models"
+
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"project-alta-store/models"
 )
+
 var DB *gorm.DB
 
+func InitDB() {
+	var appConfig map[string]string
+	appConfig, err := godotenv.Read()
+	if err != nil {
+		fmt.Println("Error reading .env file")
+	}
 
-func InitDB(){
-	connectionString := "root:@tcp(127.0.0.1:3306)/alterra_store?charset=utf8&parseTime=True&loc=Local"
-	var err error
-	DB,err = gorm.Open(mysql.Open(connectionString),&gorm.Config{})
+	mysqlCredentials := fmt.Sprintf(
+		"%s:%s@%s(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		appConfig["MYSQL_USER"],
+		appConfig["MYSQL_PASSWORD"],
+		appConfig["MYSQL_PROTOCOL"],
+		appConfig["MYSQL_HOST"],
+		appConfig["MYSQL_PORT"],
+		appConfig["MYSQL_DBNAME"],
+	)
 
-	if err != nil{
+	DB, err = gorm.Open(mysql.Open(mysqlCredentials), &gorm.Config{})
+
+	if err != nil {
 		panic(err)
 	}
 	InitMigrate()
 }
 
-func InitMigrate(){
+func InitMigrate() {
 	DB.AutoMigrate(&models.Products{})
 	DB.AutoMigrate(&models.Cartitems{})
 	DB.AutoMigrate(&models.Carts{})
