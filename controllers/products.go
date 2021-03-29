@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"project-alta-store/lib/database"
 	"project-alta-store/lib/utils"
@@ -14,11 +13,15 @@ func GetProductsController(c echo.Context) error {
 	product, err := database.GetProducts()
 
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status": "Fail",
+			"message":  err.Error(),
+		})
 	}
 
 	res := models.Products_response{
-		Code:    "200",
+		Code:    200,
 		Message: "Success",
 		Status:  "Success",
 		Data:    product,
@@ -59,7 +62,7 @@ func GetProductsByCategoryIdController(c echo.Context) error {
 	}
 
 	res := models.Products_response{
-		Code:    "200",
+		Code:    200,
 		Status:  "Success",
 		Message: "Success",
 		Data:    product,
@@ -103,6 +106,7 @@ func CreateProductsController(c echo.Context) error {
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code" : 400,
 		"message": "success Create products ",
 		"data":    product,
 	})
@@ -128,13 +132,7 @@ func UpdateProductsController(c echo.Context) error {
 		})
 	}
 	
-	if !utils.IsInt(id){
-		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
-			"code":    400,
-			"status": "Fail",
-			"message":  "invalid id supplied",
-		})
-	}
+	
 
 	product,e := database.GetProductsById(id)
 	if  e != nil {
@@ -153,7 +151,6 @@ func UpdateProductsController(c echo.Context) error {
 	product.Price = post_body.Price
 	
 	
-	fmt.Println(product)
 	_, err := database.InsertProducts(product)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
@@ -163,7 +160,8 @@ func UpdateProductsController(c echo.Context) error {
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success Create products ",
+		"code" : 200,
+		"message": "success update products ",
 		"data":    product,
 	})
 
@@ -189,7 +187,7 @@ func DeleteProductController(c echo.Context) error {
 		})
 	}
 
-	return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    200,
 		"status": "success",
 		"message":  "product succesfully deleted",
