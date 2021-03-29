@@ -37,7 +37,7 @@ type Products_update struct {
 
 
 type Products_response struct{
-	Code string  `json:"code"`
+	Code int  `json:"code"`
 	Status string `json:"status"`
 	Message string `json:"message"`
 	Data []Products `json:"data"`
