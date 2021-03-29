@@ -48,6 +48,22 @@ func RegisterUserController(c echo.Context) error {
 		})
 	}
 
+	//create cart untuk customer 
+	newCustomer,_ := database.GetCustomersByName(customer.Username)
+	newCart := models.Carts{
+		Customers_id: newCustomer.ID,
+		Status: "empty",
+	}
+	_,e := database.InsertCarts(newCart)
+
+	if e!=nil{
+		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
+			"code":    500,
+			"message": "Error registration user",
+			"status":  e.Error(),
+		})
+	}
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    200,
 		"message": "success register user",
