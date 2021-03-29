@@ -10,7 +10,8 @@ func Start() *echo.Echo {
 	e := echo.New()
 
 	// route auth
-	e.POST("/register", controllers.RegisterUserController)
+	e.POST("/register", controllers.RegisterCustomersController)
+	e.POST("/login", controllers.LoginCustomersController)
 
 	// route products
 	e.GET("/products", controllers.GetProductsController)

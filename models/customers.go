@@ -18,8 +18,8 @@ type Customers struct {
 
 type Customers_register struct {
 	Username string `gorm:"type:varchar(255);unique;not null" json:"username" validate:"required"`
-	Email    string `gorm:"type:varchar(30);unique;not null" json:"email" validate:"required,email"`
-	Password string `gorm:"type:varchar(30);not null" json:"password" validate:"required"`
+	Email    string `gorm:"type:varchar(100);unique;not null" json:"email" validate:"required,email"`
+	Password string `gorm:"type:varchar(255);not null" json:"password" validate:"required"`
 }
 
 type Customers_response struct {
