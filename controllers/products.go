@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"project-alta-store/lib/database"
+	"project-alta-store/lib/utils"
 	"project-alta-store/models"
-
-
+	"strconv"
 	"github.com/labstack/echo"
 )
 
@@ -20,6 +21,47 @@ func GetProductsController(c echo.Context) error {
 		Code:    "200",
 		Message: "Success",
 		Status:  "Success",
+		Data:    product,
+	}
+	return c.JSON(http.StatusOK, res)
+}
+
+func GetProductsByCategoryIdController(c echo.Context) error {
+
+	id,_ := strconv.Atoi(c.Param("id"))
+
+	if !utils.StringIsNotNumber(c.Param("id")){
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status": "Fail",
+			"message":  "invalid id supplied",
+		})
+	}
+
+	product, err := database.GetProductsByCategoryId(id)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status": "fail",
+			"message":  err.Error(),
+		})
+	}
+
+	
+
+	if len(product)==0{
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    404,
+			"status": "fail",
+			"message":  "product not found",
+		})
+	}
+
+	res := models.Products_response{
+		Code:    "200",
+		Status:  "Success",
+		Message: "Success",
 		Data:    product,
 	}
 	return c.JSON(http.StatusOK, res)
@@ -52,8 +94,6 @@ func CreateProductsController(c echo.Context) error {
 	product.Price = post_body.Price
 	product.Unit = post_body.Unit
 
-
-
 	_, err := database.InsertProducts(product)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
@@ -68,29 +108,90 @@ func CreateProductsController(c echo.Context) error {
 	})
 }
 
-// func UpdateProductsController(c echo.Context) error {
-// 	id,_ := strconv.Atoi(c.Param("id"))
+func UpdateProductsController(c echo.Context) error {
+	id,_ := strconv.Atoi(c.Param("id"))
 
-// 	var post_body models.Products_update
+	if !utils.StringIsNotNumber(c.Param("id")){
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status": "Fail",
+			"message":  "invalid id supplied",
+		})
+	}
+	var post_body models.Products_update
 
-// 	if e := c.Bind(&post_body); e != nil {
-// 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
-// 			"code":    500,
-// 			"message": "Fail Update data",
-// 			"status":  e.Error(),
-// 		})
-// 	}
-
-
+	if e := c.Bind(&post_body); e != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    500,
+			"status": "Fail",
+			"message":  e.Error(),
+		})
+	}
 	
-// 	// product:= models.Products{
-// 	// 	ID : id,
-// 	// 	Categories_id : post_body.Categories_id,
-// 	// 	Name : post_body.Name,
-// 	// 	Description : post_body.Description,
-// 	// 	Quantity : post_body.Quantity,
-// 	// 	Price : post_body.Price,
-// 	// 	Unit : post_body.Unit,
-// 	// }
+	if !utils.IsInt(id){
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status": "Fail",
+			"message":  "invalid id supplied",
+		})
+	}
 
-// }
+	product,e := database.GetProductsById(id)
+	if  e != nil {
+		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
+			"code":    404,
+			"status": "Failed",
+			"message":  e.Error(),
+		})
+	}
+	
+	product.Name = utils.CompareStrings(product.Name,post_body.Name)
+	product.Description = utils.CompareStrings(product.Description,post_body.Description)
+	product.Unit =utils.CompareStrings(product.Unit,post_body.Unit)
+	product.Quantity = post_body.Quantity
+	product.Categories_id = post_body.Categories_id
+	product.Price = post_body.Price
+	
+	
+	fmt.Println(product)
+	_, err := database.InsertProducts(product)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
+			"code":    500,
+			"message": "Fail insert data",
+			"status":  err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success Create products ",
+		"data":    product,
+	})
+
+}
+
+func DeleteProductController(c echo.Context) error {
+	id,_ := strconv.Atoi(c.Param("id"))
+
+	if !utils.StringIsNotNumber(c.Param("id")){
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status": "Fail",
+			"message":  "invalid id supplied",
+		})
+	}
+
+	err := database.DeleteProductsById(id)
+	if err!=nil{
+		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
+			"code":    404,
+			"status": "Fail",
+			"message":  err.Error(),
+		})
+	}
+
+	return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+		"code":    200,
+		"status": "success",
+		"message":  "product succesfully deleted",
+	})
+}

@@ -4,16 +4,17 @@ import (
 	"time"
 )
 
-type Products struct {
-	ID            int     `gorm:"primarykey;AUTO_INCREMENT"`
-	Name          string  `gorm:"type:varchar(255);unique;not null"`
-	Categories_id int     `gorm:"type:bigint(20);foreignkey;not null"`
-	Description   string  `gorm:"type:varchar(255);not null"`
-	Quantity      int     `gorm:"type:bigint(20);not null"`
-	Price         float32 `gorm:"type:float;not null"`
-	Unit          string  `gorm:"type:varchar(255);not null"`
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
+
+type Products struct{
+	ID        int `gorm:"primarykey;AUTO_INCREMENT" json:"id"`
+	Name string `gorm:"type:varchar(255);unique;not null" json:"name"`
+	Categories_id int  `gorm:"type:bigint(20);foreignkey;not null" json:"categories_id"` 
+	Description string `gorm:"type:varchar(255);not null" json:"description"`
+	Quantity int `gorm:"not null" json:"quantity"`
+	Price float32 `gorm:"type:float;not null" json:"price"`
+	Unit string `gorm:"type:varchar(255);not null" json:"unit"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type Products_post struct {
@@ -34,9 +35,10 @@ type Products_update struct {
 	Unit          string  `json:"unit" form:"unit"`
 }
 
-type Products_response struct {
-	Code    string
-	Message string
-	Status  string
-	Data    interface{}
+
+type Products_response struct{
+	Code string  `json:"code"`
+	Status string `json:"status"`
+	Message string `json:"message"`
+	Data []Products `json:"data"`
 }
