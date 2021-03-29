@@ -23,7 +23,11 @@ func Start() *echo.Echo {
 	e.DELETE("/categories/:id",controllers.DeleteCategoriesController)
 
 
-
+	//Route  CartItems
+	e.GET("/cartitems/:id",controllers.GetCartitemsByCartIdController)
+	e.POST("/cartitems",controllers.CreateCartitemsController)
+	e.PUT("/cartitems/:id",controllers.UpdateCartitemsController)
+	e.DELETE("/cartitems/:id",controllers.DeleteCartitemsController)
 	// route auth
 	e.POST("/register", controllers.RegisterUserController)
 

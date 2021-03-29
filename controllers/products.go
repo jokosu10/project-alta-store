@@ -54,7 +54,7 @@ func GetProductsByCategoryIdController(c echo.Context) error {
 	
 
 	if len(product)==0{
-		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
 			"code":    404,
 			"status": "fail",
 			"message":  "product not found",
@@ -76,14 +76,14 @@ func CreateProductsController(c echo.Context) error {
 	// c.Bind(&post_body)
 	if e := c.Bind(&post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
-			"code":    500,
+			"code":    400,
 			"message": "Fail insert data",
 			"status":  e.Error(),
 		})
 	}
 	if e:= models.Validate.Struct(post_body);e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
-			"code":    500,
+			"code":    400,
 			"message": "Fail insert data",
 			"status":  e.Error(),
 		})
@@ -126,7 +126,7 @@ func UpdateProductsController(c echo.Context) error {
 
 	if e := c.Bind(&post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
-			"code":    500,
+			"code":    400,
 			"status": "Fail",
 			"message":  e.Error(),
 		})
