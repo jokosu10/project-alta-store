@@ -12,7 +12,6 @@ func Start() *echo.Echo {
 	e := echo.New()
 
 	//Route Products
-	e.GET("/products/:id", controllers.GetProductsByCategoryIdController)
 	e.GET("/products", controllers.GetProductsController)
 	e.POST("/products", controllers.CreateProductsController)
 	e.PUT("/products/:id", controllers.UpdateProductsController)
