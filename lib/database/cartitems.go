@@ -60,3 +60,22 @@ func ExtractCartItemsFromUser(userId int)([]models.Cartitems,error){
 
 	return cartItems,nil
 }
+
+func ConvertIntoCartResponse(cartItems []models.Cartitems) []models.CartItems_response_user{
+   cartArr := []models.CartItems_response_user{}
+   for _,item := range cartItems{
+	   var product models.Products 
+	   config.DB.Where("ID = ?",item.Products_id).Find(&product)
+       
+	   a:= models.CartItems_response_user{
+		   ID: item.ID,
+		   Carts_id: item.Carts_id,
+		   Name: product.Name,
+		   Price: product.Price,
+		   Quantity: item.Quantity,
+		   Products_id: item.Products_id,
+	   }
+	   cartArr = append(cartArr, a)
+   }
+   return cartArr
+}
