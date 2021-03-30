@@ -36,6 +36,10 @@ func GetProductsByCategoryId(id int)([]models.Products,error){
 	return product,nil
 }
 
+func GetProductUser([]models.Products,error){
+	
+}
+
 func InsertProducts(product models.Products) (interface{},error){
 
 	if err := config.DB.Save(&product).Error; err!=nil{
@@ -46,7 +50,6 @@ func InsertProducts(product models.Products) (interface{},error){
 
 func DeleteProductsById(id int)error{
 
-	
 	rows := config.DB.Delete(&models.Products{},id).RowsAffected
 	if rows==0{
 		err := errors.New("product to be deleted is not found")

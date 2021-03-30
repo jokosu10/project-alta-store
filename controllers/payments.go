@@ -28,7 +28,13 @@ func GetPaymentsController(c echo.Context) error {
 			"message": "succes get payment",
 			"data" : payment,
 		})
-	}else{
+	} else if len(c.QueryParam("order")) > 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status":  "Fail",
+			"message": "invalid id supplied",
+		})
+	} else{
 		payment := database.GetAllPayments()
 		return c.JSON(http.StatusOK,map[string]interface{}{
 			"code":    200,

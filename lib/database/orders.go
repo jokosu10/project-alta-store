@@ -16,7 +16,7 @@ func InsertOrders(order models.Orders) (int, error) {
 func GetOrderByCustomerId(customerId int)( []models.Orders,error){
 	var order []models.Orders
 	if rows:=config.DB.Where("Customers_id = ?",customerId).Find(&order).RowsAffected; rows<1{
-		return order,errors.New("User cart is empty")
+		return order,errors.New("user cart is empty")
 	}
 	return order,nil
 }

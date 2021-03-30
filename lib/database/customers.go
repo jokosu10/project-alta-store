@@ -38,6 +38,7 @@ func GetCustomersByEmail(email string) (models.Customers, error) {
 	}
 
 	return customer, nil
+}
 
 func GetCustomersByName(name string) (models.Customers,error) {
 	var customer models.Customers
