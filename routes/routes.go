@@ -29,6 +29,10 @@ func Start() *echo.Echo {
 	e.POST("/cartitems", controllers.CreateCartitemsController)
 	e.PUT("/cartitems/:id", controllers.UpdateCartitemsController)
 	e.DELETE("/cartitems/:id", controllers.DeleteCartitemsController)
+
+	//Route Carts
+	e.PUT("/carts/:id", controllers.UpdateCartsController)
+
 	// route auth
 	e.POST("/register", controllers.RegisterCustomersController)
 	e.POST("/login", controllers.LoginCustomersController)
@@ -37,5 +41,14 @@ func Start() *echo.Echo {
 	jwtAuth := e.Group("")
 	jwtAuth.Use(middleware.JWT([]byte(constants.SECRET_JWT)))
 	jwtAuth.POST("/categories", controllers.CreateCategoriesController)
+
+	//Order Auth
+	jwtAuth.POST("/orders", controllers.CreateOrdersController)
+	jwtAuth.GET("/orders", controllers.GetOrderController)
+
+	//Payment Auth
+	jwtAuth.GET("/payments", controllers.GetPaymentsController)
+	jwtAuth.PUT("/payments/:id", controllers.UpdatePaymentsController)
+
 	return e
 }

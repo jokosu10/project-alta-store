@@ -5,9 +5,11 @@ import (
 )
 
 type Checkout_items struct{
-	ID        int `gorm:"type:bigint(20);primarykey;AUTO_INCREMENT89=2323fkl;cvbnmc " json:"id"` 
-	Order_id int  `gorm:"type:bigint(20);foreignkey;not null" json:"order_id"` 
-	Products_id int  `gorm:"type:bigint(20);foreignkey;not null" json:"products_id"` 
+	ID        int `gorm:"primarykey;AUTO_INCREMENT" json:"id"` 
+	Order_id int  `gorm:"not null" json:"order_id"` 
+	Products_id int  `gorm:"foreignkey;not null" json:"products_id"` 
 	Quantity int `gorm:"not null" json:"quantity"`
+	Order Orders `gorm:"foreignkey:ID;references:Order_id"`
+	Product Products `gorm:"foreignkey:ID;references:Products_id"`
 	CreatedAt time.Time
 }

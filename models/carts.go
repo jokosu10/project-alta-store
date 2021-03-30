@@ -6,9 +6,13 @@ import (
 )
 
 type Carts struct{
-	ID        int `gorm:"type:bigint(20);primarykey;AUTO_INCREMENT" json:"id"` 
-	Customers_id int  `gorm:"type:bigint(20);foreignkey;not null" json:"customers_id"`
-	Status string `gorm:"type:varchar(255);unique;not null" json:"status"`
-	CartItem []Cartitems `gorm:"foreignKey:Carts_id"`
+	ID        int `gorm:"primarykey;AUTO_INCREMENT" json:"id"` 
+	Customers_id int  `gorm:"not null" json:"customers_id"`
+	Status string `gorm:"type:varchar(255);not null" json:"status"`
+	Customer Customers `gorm:"foreignKey:ID;references:Customers_id"`
 	CreatedAt time.Time
+}
+
+type Carts_update struct{
+	Status string `json:"status" validate:"required"`
 }

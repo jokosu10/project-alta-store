@@ -38,6 +38,22 @@ func GetCustomersByEmail(email string) (models.Customers, error) {
 	}
 
 	return customer, nil
+
+func GetCustomersByName(name string) (models.Customers,error) {
+	var customer models.Customers
+	if e:=config.DB.Where("Username = ?",name).Find(&customer).Error; e!=nil{
+		return customer,e
+	}
+
+	return customer,nil
+}
+
+func GetCustomersAddress(customerId int)(string,error){
+	var customer models.Customers
+	if e:=config.DB.Where("ID = ?",customerId).Find(&customer).Error; e!=nil{
+		return " ",e
+	}
+	return customer.Address,nil
 }
 
 func LoginCustomers(customer models.Customers) (interface{}, error) {
@@ -58,3 +74,4 @@ func LoginCustomers(customer models.Customers) (interface{}, error) {
 	}
 	return customer, nil
 }
+

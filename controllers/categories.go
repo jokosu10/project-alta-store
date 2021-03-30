@@ -6,9 +6,9 @@ import (
 	"project-alta-store/lib/utils"
 	"project-alta-store/models"
 	"strconv"
+
 	"github.com/labstack/echo"
 )
-
 
 func GetCategoriesController(c echo.Context) error {
 	categories, err := database.GetCategories()
@@ -16,8 +16,8 @@ func GetCategoriesController(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "Fail",
-			"message":  err.Error(),
+			"status":  "Fail",
+			"message": err.Error(),
 		})
 	}
 
@@ -32,19 +32,20 @@ func GetCategoriesController(c echo.Context) error {
 
 func CreateCategoriesController(c echo.Context) error {
 	var post_body models.Categories_post
+
 	// c.Bind(&post_body)
 	if e := c.Bind(&post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "error",
-			"message":  e.Error(),
+			"status":  "error",
+			"message": e.Error(),
 		})
 	}
-	if e:= models.Validate.Struct(post_body);e != nil {
+	if e := models.Validate.Struct(post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "Error",
-			"message":  e.Error(),
+			"status":  "Error",
+			"message": e.Error(),
 		})
 	}
 
@@ -56,26 +57,26 @@ func CreateCategoriesController(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
 			"code":    500,
-			"status": "error",
-			"message":  err.Error(),
+			"status":  "error",
+			"message": err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, models.Categories_response_single{
-		Code:200,
-		Status:"success",
-		Message:"success insert categories",
-		Data: categories,
+		Code:    200,
+		Status:  "success",
+		Message: "success insert categories",
+		Data:    categories,
 	})
 }
 
 func UpdateCategoriesController(c echo.Context) error {
-	id,_ := strconv.Atoi(c.Param("id"))
-	
-	if !utils.StringIsNotNumber(c.Param("id")){
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	if !utils.StringIsNotNumber(c.Param("id")) {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "Fail",
-			"message":  "invalid id supplied",
+			"status":  "Fail",
+			"message": "invalid id supplied",
 		})
 	}
 	var post_body models.Categories_update
@@ -83,64 +84,62 @@ func UpdateCategoriesController(c echo.Context) error {
 	if e := c.Bind(&post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "fail",
-			"message":  e.Error(),
+			"status":  "fail",
+			"message": e.Error(),
 		})
 	}
-	
 
-	categories,e := database.GetCategoriesById(id)
-	if  e != nil {
+	categories, e := database.GetCategoriesById(id)
+	if e != nil {
 		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
 			"code":    404,
-			"status": "fail",
-			"message":  e.Error(),
+			"status":  "fail",
+			"message": e.Error(),
 		})
 	}
-	
-	categories.Name = utils.CompareStrings(categories.Name,post_body.Name)
-	categories.Description = utils.CompareStrings(categories.Description,post_body.Description)
-	
+
+	categories.Name = utils.CompareStrings(categories.Name, post_body.Name)
+	categories.Description = utils.CompareStrings(categories.Description, post_body.Description)
+
 	_, err := database.InsertCategories(categories)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
 			"code":    500,
-			"status": "fail",
-			"message":  err.Error(),
+			"status":  "fail",
+			"message": err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"code" : 200,
-		"status" : "success",
+		"code":    200,
+		"status":  "success",
 		"message": "success update categories ",
 		"data":    categories,
 	})
 }
 
-
 func DeleteCategoriesController(c echo.Context) error {
-	id,_ := strconv.Atoi(c.Param("id"))
+	id, _ := strconv.Atoi(c.Param("id"))
 
-	if !utils.StringIsNotNumber(c.Param("id")){
+	if !utils.StringIsNotNumber(c.Param("id")) {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "Fail",
-			"message":  "invalid id supplied",
+			"status":  "Fail",
+			"message": "invalid id supplied",
 		})
 	}
 
 	err := database.DeleteCategoriesById(id)
-	if err!=nil{
+	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
 			"code":    404,
-			"status": "Fail",
-			"message":  err.Error(),
+			"status":  "Fail",
+			"message": err.Error(),
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    200,
-		"status": "success",
-		"message":  "category succesfully deleted",
+		"status":  "success",
+		"message": "category succesfully deleted",
 	})
 }
