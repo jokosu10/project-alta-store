@@ -6,28 +6,30 @@ import (
 	"project-alta-store/lib/utils"
 	"project-alta-store/models"
 	"strconv"
+
 	"github.com/labstack/echo"
 )
 
 func CreateCartitemsController(c echo.Context) error {
 	var post_body models.Cartitems_Post
+
 	// c.Bind(&post_body)
 	if e := c.Bind(&post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "error",
-			"message":  e.Error(),
+			"status":  "error",
+			"message": e.Error(),
 		})
 	}
-	if e:= models.Validate.Struct(post_body);e != nil {
+	if e := models.Validate.Struct(post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "Error",
-			"message":  e.Error(),
+			"status":  "Error",
+			"message": e.Error(),
 		})
 	}
 
-	var  cartitems models.Cartitems
+	var cartitems models.Cartitems
 	cartitems.Carts_id = *post_body.Carts_id
 	cartitems.Products_id = *post_body.Products_id
 	cartitems.Quantity = *post_body.Quantity
@@ -36,27 +38,27 @@ func CreateCartitemsController(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
 			"code":    500,
-			"status": "error",
-			"message":  err.Error(),
+			"status":  "error",
+			"message": err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, models.Cartitems_response_single{
-		Code:200,
-		Status:"success",
-		Message:"success insert cartitems",
-		Data: cartitems,
+		Code:    200,
+		Status:  "success",
+		Message: "success insert cartitems",
+		Data:    cartitems,
 	})
 }
 
 func GetCartitemsByCartIdController(c echo.Context) error {
 
-	id,_ := strconv.Atoi(c.Param("id"))
+	id, _ := strconv.Atoi(c.Param("id"))
 
-	if !utils.StringIsNotNumber(c.Param("id")){
+	if !utils.StringIsNotNumber(c.Param("id")) {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "Fail",
-			"message":  "invalid id supplied",
+			"status":  "Fail",
+			"message": "invalid id supplied",
 		})
 	}
 
@@ -65,8 +67,8 @@ func GetCartitemsByCartIdController(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "fail",
-			"message":  err.Error(),
+			"status":  "fail",
+			"message": err.Error(),
 		})
 	}
 
@@ -87,15 +89,14 @@ func GetCartitemsByCartIdController(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-
 func UpdateCartitemsController(c echo.Context) error {
-	id,_ := strconv.Atoi(c.Param("id"))
-	
-	if !utils.StringIsNotNumber(c.Param("id")){
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	if !utils.StringIsNotNumber(c.Param("id")) {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "Fail",
-			"message":  "invalid id supplied",
+			"status":  "Fail",
+			"message": "invalid id supplied",
 		})
 	}
 	var post_body models.Cartitems_Update
@@ -103,63 +104,61 @@ func UpdateCartitemsController(c echo.Context) error {
 	if e := c.Bind(&post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "fail",
-			"message":  e.Error(),
+			"status":  "fail",
+			"message": e.Error(),
 		})
 	}
-	
 
-	cartitems,e := database.GetCartitemsById(id)
-	if  e != nil {
+	cartitems, e := database.GetCartitemsById(id)
+	if e != nil {
 		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
 			"code":    404,
-			"status": "fail",
-			"message":  e.Error(),
+			"status":  "fail",
+			"message": e.Error(),
 		})
 	}
 
 	cartitems.Quantity = *post_body.Quantity
-	
+
 	_, err := database.InsertCartitems(cartitems)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
 			"code":    500,
-			"status": "fail",
-			"message":  err.Error(),
+			"status":  "fail",
+			"message": err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"code" : 200,
-		"status" : "success",
+		"code":    200,
+		"status":  "success",
 		"message": "success update cartitems ",
 		"data":    cartitems,
 	})
 }
 
-
 func DeleteCartitemsController(c echo.Context) error {
-	id,_ := strconv.Atoi(c.Param("id"))
+	id, _ := strconv.Atoi(c.Param("id"))
 
-	if !utils.StringIsNotNumber(c.Param("id")){
+	if !utils.StringIsNotNumber(c.Param("id")) {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
-			"status": "Fail",
-			"message":  "invalid id supplied",
+			"status":  "Fail",
+			"message": "invalid id supplied",
 		})
 	}
 
 	err := database.DeleteCartitemsById(id)
-	if err!=nil{
+	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
 			"code":    404,
-			"status": "Fail",
-			"message":  err.Error(),
+			"status":  "Fail",
+			"message": err.Error(),
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    200,
-		"status": "success",
-		"message":  "cartitems succesfully deleted",
+		"status":  "success",
+		"message": "cartitems succesfully deleted",
 	})
 }

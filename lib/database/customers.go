@@ -22,6 +22,14 @@ func GetCustomersByName(name string)(models.Customers,error){
 	return customer,nil
 }
 
+func GetCustomersAddress(customerId int)(string,error){
+	var customer models.Customers
+	if e:=config.DB.Where("ID = ?",customerId).Find(&customer).Error; e!=nil{
+		return " ",e
+	}
+	return customer.Address,nil
+}
+
 func LoginCustomers(customer models.Customers) (interface{}, error) {
 	var err error
 
