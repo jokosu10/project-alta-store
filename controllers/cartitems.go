@@ -63,7 +63,7 @@ func GetCartitemsByCartIdController(c echo.Context) error {
 	}
 
 	cartItems, err := database.GetCartitemsByCartsId(id)
-
+    cartResponse := database.ConvertIntoCartResponse(cartItems)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
@@ -80,11 +80,11 @@ func GetCartitemsByCartIdController(c echo.Context) error {
 	// 	})
 	// }
 
-	res := models.Cartitems_response{
-		Code:    200,
-		Status:  "Success",
-		Message: "Success",
-		Data:    cartItems,
+	res := map[string]interface{}{
+		"code":    200,
+		"status":  "success",
+		"message": "success get cartitems",
+		"data":    cartResponse,
 	}
 	return c.JSON(http.StatusOK, res)
 }

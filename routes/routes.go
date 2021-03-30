@@ -36,6 +36,9 @@ func Start() *echo.Echo {
 	e.POST("/register", controllers.RegisterCustomersController)
 	e.POST("/login", controllers.LoginCustomersController)
 
+	//checkout items
+	e.GET("/checkoutitems",controllers.GetCheckoutItemsController)
+
 	// route jwt
 	jwtAuth := e.Group("")
 	jwtAuth.Use(middleware.JWT([]byte(constants.SECRET_JWT)))
