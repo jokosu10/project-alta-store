@@ -43,5 +43,20 @@ func DeleteCartitemsById(id int)error{
 		return err
 	}
 	return nil
+}
 
+func ExtractCartItemsFromUser(userId int)([]models.Cartitems,error){
+	userCartId,_:= GetCartsIdFromUser(userId)
+	//ambil semua item cart milik user
+	var cartItems []models.Cartitems
+	if rows:=config.DB.Where("Carts_id = ?",userCartId).Find(&cartItems).RowsAffected; rows<1{
+		return cartItems,errors.New("User cart is empty")
+	}
+
+	//kosongkan semua item yg sudah diambil
+	for _,item := range cartItems{
+		config.DB.Delete(&models.Cartitems{},item.ID)
+	}
+
+	return cartItems,nil
 }

@@ -36,5 +36,8 @@ func Start() *echo.Echo {
 	e.POST("/register", controllers.RegisterCustomersController)
 	e.POST("/login", controllers.LoginCustomersController)
 
+	//Order Auth
+	e.POST("/orders",controllers.CreateOrdersController)
+	e.GET("/orders",controllers.GetOrderController)
 	return e
 }

@@ -22,6 +22,13 @@ func GetCartsById(id int) (models.Carts,error){
 		err := errors.New("carts not found")
 		return carts,err
 	}
-	
 	return carts,nil
+}
+
+func GetCartsIdFromUser(customerId int)(int,error){
+	var carts models.Carts
+	if rows:=config.DB.Where("Customers_id = ?",customerId).Find(&carts).RowsAffected; rows<1{
+		return -1,errors.New("carts not found")
+	}
+	return carts.ID,nil
 }
