@@ -12,14 +12,20 @@ type Customers struct {
 	Address             string `gorm:"type:varchar(255);" json:"address"`
 	Bank_name           string `gorm:"type:varchar(255);" json:"bank_name"`
 	Bank_account_number string `gorm:"type:bigint(20);default:0;" json:"bank_account_number"`
-	Token               string `gorm:"type:varchar(255);" json:"token"`
 	CreatedAt           time.Time
 }
 
 type Customers_register struct {
-	Username string `gorm:"type:varchar(255);unique;not null" json:"username" validate:"required"`
-	Email    string `gorm:"type:varchar(100);unique;not null" json:"email" validate:"required,email"`
-	Password string `gorm:"type:varchar(255);not null" json:"password" validate:"required"`
+	Username string `json:"username" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
+}
+
+type Customers_login struct {
+	ID       int    `gorm:"primarykey;" json:"id"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Token    string `json:"token"`
 }
 
 type Customers_response struct {

@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"project-alta-store/lib/database"
+	"project-alta-store/middlewares"
 	"project-alta-store/models"
 
 	"github.com/labstack/echo"
@@ -66,14 +67,30 @@ func RegisterCustomersController(c echo.Context) error {
 }
 
 func LoginCustomersController(c echo.Context) error {
-	var customerLogin models.Customers
+	var customerData models.Customers
+	var customerLogin models.Customers_login
+	var err error
 	c.Bind(&customerLogin)
-	customer, _ := database.LoginCustomers(customerLogin)
+
+	customerData.Email = customerLogin.Email
+	customerData.Password = customerLogin.Password
+
+	customerLogin.Token, err = middlewares.CreateToken(int(customerData.ID))
+	customerLogin.Email = customerData.Email
+	customerLogin.ID = customerData.ID
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"message": "Error invalid JWT",
+			"status":  "Error",
+		})
+	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    200,
 		"message": "success login customer",
 		"status":  "success",
-		"data":    customer,
+		"data":    customerLogin,
 	})
 }
