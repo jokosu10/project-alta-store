@@ -1,12 +1,13 @@
 package database
 
 import (
+	"errors"
 	"project-alta-store/config"
 	"project-alta-store/models"
 	"time"
 )
 
-func InsertPayments(order models.Orders_post,order_id int) (error) {
+func InsertPaymentsWithOrderId(order models.Orders_post,order_id int) (error) {
 	var newPayment models.Payments
 	timeFormat := "2006-01-02 15:04:05"
 	newPayment.Order_id = order_id
@@ -20,4 +21,34 @@ func InsertPayments(order models.Orders_post,order_id int) (error) {
 		return err
 	}
 	return nil
+}
+
+func InsertPayments(payment models.Payments) (error) {
+
+	if err := config.DB.Save(&payment).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetAllPayments()[]models.Payments{
+  var payment []models.Payments
+  config.DB.Find(&payment)
+  return payment
+}
+
+func GetPaymentByOrderId(orderId int)(models.Payments,error){
+	var payment models.Payments
+	if err := config.DB.Where("Order_id = ?", orderId).Find(&payment).Error; err!=nil{
+		return payment,err
+	}
+	return payment,nil
+}
+
+func GetPaymentById(id int)(models.Payments,error){
+	var payment models.Payments
+	if rows := config.DB.Where("ID = ?", id).Find(&payment).RowsAffected; rows<1{
+		return payment,errors.New("No payment found")
+	}
+	return payment,nil
 }

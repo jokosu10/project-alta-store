@@ -35,7 +35,7 @@ func CreateOrdersController(c echo.Context) error {
 	//save order
 	orderID, err := database.InsertOrders(newOrder)
 	//create payment
-	database.InsertPayments(post_body,orderID)
+	database.InsertPaymentsWithOrderId(post_body,orderID)
 	//pindahin semua item dari keranjang user ke checkout items
 	cartItemsArr,_:= database.ExtractCartItemsFromUser(post_body.Customers_id)
 	database.InsertCheckoutItems(cartItemsArr,orderID)
@@ -56,7 +56,7 @@ func CreateOrdersController(c echo.Context) error {
 }
 
 func GetOrderController(c echo.Context) error {
-	userId := c.QueryParam("userid")
+	userId := c.QueryParam("user")
 	if !utils.StringIsNotNumber(userId){
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,

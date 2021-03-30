@@ -39,5 +39,9 @@ func Start() *echo.Echo {
 	//Order Auth
 	e.POST("/orders",controllers.CreateOrdersController)
 	e.GET("/orders",controllers.GetOrderController)
+
+	//Payment Auth
+	e.GET("/payments",controllers.GetPaymentsController)
+	e.PUT("/payments/:id",controllers.UpdatePaymentsController)
 	return e
 }
