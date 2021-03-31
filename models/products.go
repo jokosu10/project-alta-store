@@ -13,7 +13,7 @@ type Products struct{
 	Quantity int `gorm:"not null" json:"quantity"`
 	Price float32 `gorm:"type:float;not null" json:"price"`
 	Unit string `gorm:"type:varchar(255);not null" json:"unit"`
-	Category Categories `gorm:"foreignKey:ID;references:Categories_id"`
+	Category Categories `gorm:"foreignKey:ID;references:Categories_id" json:"-"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -26,6 +26,8 @@ type Products_post struct {
 	Price         float32 `json:"price" form:"price" validate:"required"`
 	Unit          string  `json:"unit" form:"unit" validate:"required"`
 }
+
+
 
 type Products_update struct {
 	Name          string  `json:"name" form:"name"`
