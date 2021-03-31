@@ -22,10 +22,17 @@ type Customers_register struct {
 }
 
 type Customers_login struct {
-	ID       int    `gorm:"primarykey;" json:"id"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Token    string `json:"token"`
+	ID    int    `gorm:"primarykey;" json:"id"`
+	Email string `json:"email" validate:"required,email"`
+	Token string `json:"token"`
+}
+
+type Customers_update struct {
+	Username            string `json:"username"`
+	Email               string `json:"email" alidate:"required,email"`
+	Address             string `json:"address"`
+	Bank_name           string `json:"bank_name"`
+	Bank_account_number string `json:"bank_account_number"`
 }
 
 type Customers_response struct {

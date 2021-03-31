@@ -2,9 +2,12 @@ package controllers
 
 import (
 	"net/http"
+	"project-alta-store/config"
 	"project-alta-store/lib/database"
+	"project-alta-store/lib/utils"
 	"project-alta-store/middlewares"
 	"project-alta-store/models"
+	"strconv"
 
 	"github.com/labstack/echo"
 	"golang.org/x/crypto/bcrypt"
@@ -59,15 +62,15 @@ func RegisterCustomersController(c echo.Context) error {
 		})
 	}
 
-	//create cart untuk customer 
-	newCustomer,_ := database.GetCustomersByName(customer.Username)
+	//create cart untuk customer
+	newCustomer, _ := database.GetCustomersByName(customer.Username)
 	newCart := models.Carts{
 		Customers_id: newCustomer.ID,
-		Status: "empty",
+		Status:       "empty",
 	}
-	_,e := database.InsertCarts(newCart)
+	_, e := database.InsertCarts(newCart)
 
-	if e!=nil{
+	if e != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
 			"code":    500,
 			"message": "Error registration user",
@@ -86,10 +89,15 @@ func LoginCustomersController(c echo.Context) error {
 	var customerData models.Customers
 	var customerLogin models.Customers_login
 	var err error
-	c.Bind(&customerLogin)
+	c.Bind(&customerData)
 
-	customerData.Email = customerLogin.Email
-	customerData.Password = customerLogin.Password
+	if err = config.DB.Where("email = ? AND password = ?", customerData.Email, customerData.Password).First(&customerData).Error; err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"message": "Invalid email or password",
+			"status":  err.Error(),
+		})
+	}
 
 	customerLogin.Token, err = middlewares.CreateToken(int(customerData.ID))
 	customerLogin.Email = customerData.Email
@@ -109,4 +117,58 @@ func LoginCustomersController(c echo.Context) error {
 		"status":  "success",
 		"data":    customerLogin,
 	})
+}
+
+func UpdateProfileCustomersController(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	if !utils.StringIsNotNumber(c.Param("id")) {
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status":  "Fail",
+			"message": "invalid id customers",
+		})
+	}
+
+	var post_body models.Customers_update
+
+	if e := c.Bind(&post_body); e != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status":  "fail",
+			"message": e.Error(),
+		})
+	}
+
+	customers, e := database.GetCustomersByid(id)
+
+	if e != nil {
+		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
+			"code":    404,
+			"status":  "fail",
+			"message": e.Error(),
+		})
+	}
+
+	customers.Username = utils.CompareStrings(customers.Username, post_body.Username)
+	customers.Email = utils.CompareStrings(customers.Email, post_body.Email)
+	customers.Address = utils.CompareStrings(customers.Address, post_body.Address)
+	customers.Bank_name = utils.CompareStrings(customers.Bank_name, post_body.Bank_name)
+	customers.Bank_account_number = post_body.Bank_account_number
+
+	_, err := database.InsertCustomers(customers)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
+			"code":    500,
+			"status":  "fail",
+			"message": err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    200,
+		"status":  "success",
+		"message": "success update profil customer",
+		"data":    customers,
+	})
+
 }

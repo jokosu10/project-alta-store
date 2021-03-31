@@ -50,5 +50,8 @@ func Start() *echo.Echo {
 	jwtAuth.GET("/payments", controllers.GetPaymentsController)
 	jwtAuth.PUT("/payments/:id", controllers.UpdatePaymentsController)
 
+	// update profile
+	jwtAuth.PUT("/customers/:id", controllers.UpdateProfileCustomersController)
+
 	return e
 }
