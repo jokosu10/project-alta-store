@@ -36,6 +36,41 @@ func InitDB() {
 	InitMigrate()
 }
 
+func InitDBTest(){
+	var appConfig map[string]string
+	appConfig, err := godotenv.Read()
+	if err != nil {
+		fmt.Println("Error reading .env file")
+	}
+
+	mysqlCredentials := fmt.Sprintf(
+		"%s:%s@%s(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		appConfig["MYSQL_USER"],
+		appConfig["MYSQL_PASSWORD"],
+		appConfig["MYSQL_PROTOCOL"],
+		appConfig["MYSQL_HOST"],
+		appConfig["MYSQL_PORT"],
+		appConfig["DBNAME_TEST"],
+	)
+	mysqlCredentials = "root:@tcp(127.0.0.1:3306)/alterra_test?charset=utf8&parseTime=True&loc=Local"
+	DB, err = gorm.Open(mysql.Open(mysqlCredentials), &gorm.Config{})
+
+	if err != nil {
+		panic(err)
+	}
+	InitMigrateTest()
+}
+
+func InitMigrateTest(){
+	DB.Migrator().DropTable(&models.Categories{})
+	DB.Migrator().DropTable(&models.Products{})
+	DB.AutoMigrate(&models.Categories{})
+	DB.AutoMigrate(&models.Products{})
+
+
+}
+
+
 func InitMigrate() {
 	DB.AutoMigrate(&models.Customers{})
 	DB.AutoMigrate(&models.Products{})

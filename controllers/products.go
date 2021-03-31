@@ -32,10 +32,10 @@ func GetProductsController(c echo.Context) error {
 		}
 		return c.JSON(http.StatusOK, res)
 	} else if len(c.QueryParam("category")) > 0 {
-		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
-			"code":    400,
-			"status":  "Fail",
-			"message": "invalid id supplied",
+		return echo.NewHTTPError(http.StatusBadRequest, models.ErrorResponse{
+			Code:    400,
+			Status:  "fail",
+			Message : "invalid id supplied",
 		})
 	} else {
 		product, err := database.GetProducts()
@@ -43,7 +43,7 @@ func GetProductsController(c echo.Context) error {
 		if err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 				"code":    400,
-				"status":  "Fail",
+				"status":  "fail",
 				"message": err.Error(),
 			})
 		}
