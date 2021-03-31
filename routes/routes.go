@@ -10,9 +10,11 @@ import (
 
 func Start() *echo.Echo {
 	e := echo.New()
+	e.Pre(middleware.RemoveTrailingSlash())
+	jwtAuth := e.Group("")
 
 	//Route Products
-	e.GET("/products", controllers.GetProductsController)
+	jwtAuth.GET("/products", controllers.GetProductsController)
 	e.POST("/products", controllers.CreateProductsController)
 	e.PUT("/products/:id", controllers.UpdateProductsController)
 	e.DELETE("/products/:id", controllers.DeleteProductController)
@@ -40,7 +42,6 @@ func Start() *echo.Echo {
 	e.GET("/checkoutitems",controllers.GetCheckoutItemsController)
 
 	// route jwt
-	jwtAuth := e.Group("")
 	jwtAuth.Use(middleware.JWT([]byte(constants.SECRET_JWT)))
 	jwtAuth.POST("/categories", controllers.CreateCategoriesController)
 
