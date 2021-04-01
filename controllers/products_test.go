@@ -77,52 +77,52 @@ func TestGetProductController(t *testing.T){
 		}
 }
 
-func TestErrorGetProductController(t *testing.T){
-	var testCases = []struct{
-		url  string
-		code int
-		status string
-		paramName string
-		paramValue string
-	}{
-		{
-			"/products",
-			400,
-			"fail",
-			"category",
-			"nina",
-		},
-		{
-			"/products",
-			400,
-			"fail",
-			"category",
-			"zzz",
-		},
-	}
+// func TestErrorGetProductController(t *testing.T){
+// 	var testCases = []struct{
+// 		url  string
+// 		code int
+// 		status string
+// 		paramName string
+// 		paramValue string
+// 	}{
+// 		{
+// 			"/products",
+// 			400,
+// 			"fail",
+// 			"category",
+// 			"nina",
+// 		},
+// 		{
+// 			"/products",
+// 			400,
+// 			"fail",
+// 			"category",
+// 			"zzz",
+// 		},
+// 	}
 
-	e:=InitEcho()
-	// insertDB()
-	for _, testCase := range testCases{
-		fmt.Println(testCase)
-		q := make(url.Values)
-		q.Set(testCase.paramName,testCase.paramValue)
-		req := httptest.NewRequest(http.MethodGet,"/?"+q.Encode(),nil)
-		rec := httptest.NewRecorder()
-		c := e.NewContext(req,rec)
-		c.SetPath(testCase.url)
-		fmt.Println(q.Encode())
-		assert.Error(t,GetProductsController(c))
-			// assert.Equal(t,testCase.code,rec.Code)
-			// body := rec.Body.String()
-			// jsonData := []byte(body)
-			// // var response models.ErrorResponse
-			// var response models.ErrorResponse
-			// json.Unmarshal(jsonData,&response)
-			// fmt.Println(body)
-			// assert.Equal(t,testCase.code,response.Code,"Error code must be 400")
-			// assert.Equal(t,testCase.status,response.Status,"Error status must be fail")
+// 	e:=InitEcho()
+// 	// insertDB()
+// 	for _, testCase := range testCases{
+// 		fmt.Println(testCase)
+// 		q := make(url.Values)
+// 		q.Set(testCase.paramName,testCase.paramValue)
+// 		req := httptest.NewRequest(http.MethodGet,"/?"+q.Encode(),nil)
+// 		rec := httptest.NewRecorder()
+// 		c := e.NewContext(req,rec)
+// 		c.SetPath(testCase.url)
+// 		fmt.Println(q.Encode())
+// 		assert.Error(t,GetProductsController(c))
+// 			// assert.Equal(t,testCase.code,rec.Code)
+// 			// body := rec.Body.String()
+// 			// jsonData := []byte(body)
+// 			// // var response models.ErrorResponse
+// 			// var response models.ErrorResponse
+// 			// json.Unmarshal(jsonData,&response)
+// 			// fmt.Println(body)
+// 			// assert.Equal(t,testCase.code,response.Code,"Error code must be 400")
+// 			// assert.Equal(t,testCase.status,response.Status,"Error status must be fail")
 		
-}
+// }
 
-}
+// }

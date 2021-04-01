@@ -17,6 +17,12 @@ type CartItems_response_user struct{
 	Price float32 `json:"price"`
 	Quantity    int `json:"quantity"`
 }
+type CartItems_response_detail struct{
+	Code    int         `json:"code"`
+	Status  string      `json:"status"`
+	Message string      `json:"message"`
+	Data    []CartItems_response_user `json:"data"`
+}
 
 type Cartitems_Post struct {
 	Carts_id    *int `json:"carts_id" validate:"required"`

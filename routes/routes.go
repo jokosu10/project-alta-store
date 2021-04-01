@@ -27,7 +27,7 @@ func Start() *echo.Echo {
 	jwtAuth.DELETE("/categories/:id", controllers.DeleteCategoriesController)
 
 	//Route  CartItems
-	jwtAuth.GET("/cartitems/:id", controllers.GetCartitemsByCartIdController)
+	jwtAuth.GET("/cartitems", controllers.GetCartitemsByCartIdController)
 	jwtAuth.POST("/cartitems", controllers.CreateCartitemsController)
 	jwtAuth.PUT("/cartitems/:id", controllers.UpdateCartitemsController)
 	jwtAuth.DELETE("/cartitems/:id", controllers.DeleteCartitemsController)
@@ -36,8 +36,8 @@ func Start() *echo.Echo {
 	jwtAuth.PUT("/carts/:id", controllers.UpdateCartsController)
 
 	// route auth
-	jwtAuth.POST("/register", controllers.RegisterCustomersController)
-	jwtAuth.POST("/login", controllers.LoginCustomersController)
+	e.POST("/register", controllers.RegisterCustomersController)
+	e.POST("/login", controllers.LoginCustomersController)
 
 	//checkout items
 	jwtAuth.GET("/checkoutitems", controllers.GetCheckoutItemsController)
