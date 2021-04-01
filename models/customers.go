@@ -29,7 +29,7 @@ type Customers_login struct {
 
 type Customers_update struct {
 	Username            string `json:"username"`
-	Email               string `json:"email" alidate:"required,email"`
+	Email               string `json:"email" validate:"required,email"`
 	Address             string `json:"address"`
 	Bank_name           string `json:"bank_name"`
 	Bank_account_number string `json:"bank_account_number"`

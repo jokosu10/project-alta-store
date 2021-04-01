@@ -12,38 +12,35 @@ func Start() *echo.Echo {
 	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
 	jwtAuth := e.Group("")
+	jwtAuth.Use(middleware.JWT([]byte(constants.SECRET_JWT)))
 
 	//Route Products
 	jwtAuth.GET("/products", controllers.GetProductsController)
-	e.POST("/products", controllers.CreateProductsController)
-	e.PUT("/products/:id", controllers.UpdateProductsController)
-	e.DELETE("/products/:id", controllers.DeleteProductController)
+	jwtAuth.POST("/products", controllers.CreateProductsController)
+	jwtAuth.PUT("/products/:id", controllers.UpdateProductsController)
+	jwtAuth.DELETE("/products/:id", controllers.DeleteProductController)
 
 	//Route Categories
-	e.GET("/categories", controllers.GetCategoriesController)
-	// e.POST("/categories", controllers.CreateCategoriesController)
-	e.PUT("/categories/:id", controllers.UpdateCategoriesController)
-	e.DELETE("/categories/:id", controllers.DeleteCategoriesController)
+	jwtAuth.GET("/categories", controllers.GetCategoriesController)
+	jwtAuth.POST("/categories", controllers.CreateCategoriesController)
+	jwtAuth.PUT("/categories/:id", controllers.UpdateCategoriesController)
+	jwtAuth.DELETE("/categories/:id", controllers.DeleteCategoriesController)
 
 	//Route  CartItems
-	e.GET("/cartitems/:id", controllers.GetCartitemsByCartIdController)
-	e.POST("/cartitems", controllers.CreateCartitemsController)
-	e.PUT("/cartitems/:id", controllers.UpdateCartitemsController)
-	e.DELETE("/cartitems/:id", controllers.DeleteCartitemsController)
+	jwtAuth.GET("/cartitems/:id", controllers.GetCartitemsByCartIdController)
+	jwtAuth.POST("/cartitems", controllers.CreateCartitemsController)
+	jwtAuth.PUT("/cartitems/:id", controllers.UpdateCartitemsController)
+	jwtAuth.DELETE("/cartitems/:id", controllers.DeleteCartitemsController)
 
 	//Route Carts
-	e.PUT("/carts/:id", controllers.UpdateCartsController)
+	jwtAuth.PUT("/carts/:id", controllers.UpdateCartsController)
 
 	// route auth
-	e.POST("/register", controllers.RegisterCustomersController)
-	e.POST("/login", controllers.LoginCustomersController)
+	jwtAuth.POST("/register", controllers.RegisterCustomersController)
+	jwtAuth.POST("/login", controllers.LoginCustomersController)
 
 	//checkout items
-	e.GET("/checkoutitems",controllers.GetCheckoutItemsController)
-
-	// route jwt
-	jwtAuth.Use(middleware.JWT([]byte(constants.SECRET_JWT)))
-	jwtAuth.POST("/categories", controllers.CreateCategoriesController)
+	jwtAuth.GET("/checkoutitems", controllers.GetCheckoutItemsController)
 
 	//Order Auth
 	jwtAuth.POST("/orders", controllers.CreateOrdersController)
