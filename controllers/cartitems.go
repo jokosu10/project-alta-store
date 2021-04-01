@@ -74,7 +74,7 @@ func GetCartitemsByCartIdController(c echo.Context) error {
 		
 		res := models.CartItems_response_detail{
 			Code:    200,
-			Status:  "Success",
+			Status:  "success",
 			Message: "Success Get Cartitems",
 			Data:    cartResponse,
 		}
@@ -161,9 +161,9 @@ func DeleteCartitemsController(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"code":    200,
-		"status":  "success",
-		"message": "cartitems succesfully deleted",
+	return c.JSON(http.StatusOK, models.SuccessResponse{
+		Code :    200,
+		Status:  "success",
+		Message: "cartitems succesfully deleted",
 	})
 }

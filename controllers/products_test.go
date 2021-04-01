@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -10,7 +9,6 @@ import (
 	"project-alta-store/lib/database"
 	"project-alta-store/models"
 	"testing"
-
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
 )
@@ -71,7 +69,6 @@ func TestGetProductController(t *testing.T){
 				jsonData := []byte(body)
 				var response models.Products_response
 				json.Unmarshal(jsonData,&response)
-				fmt.Println(response)
 				assert.Equal(t,testCase.expectedLen,len(response.Data),"Product not selected based on category")
 			}
 		}
