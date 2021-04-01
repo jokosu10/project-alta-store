@@ -51,42 +51,47 @@ func CreateCartitemsController(c echo.Context) error {
 }
 
 func GetCartitemsByCartIdController(c echo.Context) error {
-
-	id, _ := strconv.Atoi(c.Param("id"))
-
-	if !utils.StringIsNotNumber(c.Param("id")) {
-		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
-			"code":    400,
-			"status":  "Fail",
-			"message": "invalid id supplied",
+	if utils.StringIsNotNumber(c.QueryParam("cart")) {
+		id, _ := strconv.Atoi(c.QueryParam("cart"))
+		cartItems, err := database.GetCartitemsByCartsId(id)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"status":  "fail",
+				"message": err.Error(),
+			})
+		}
+		if len(cartItems)==0{
+			res := models.Cartitems_response{
+				Code:    200,
+				Status:  "Success",
+				Message: "Success",
+				Data:    cartItems,
+			}
+			return c.JSON(http.StatusOK, res)
+		}
+		cartResponse := database.ConvertIntoCartResponse(cartItems)
+		
+		res := models.CartItems_response_detail{
+			Code:    200,
+			Status:  "success",
+			Message: "Success Get Cartitems",
+			Data:    cartResponse,
+		}
+		return c.JSON(http.StatusOK, res)
+	} else if len(c.QueryParam("cart")) > 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, models.ErrorResponse{
+			Code:    400,
+			Status:  "fail",
+			Message : "invalid id supplied",
+		})
+	} else {
+		return echo.NewHTTPError(http.StatusBadRequest, models.ErrorResponse{
+			Code:    400,
+			Status:  "fail",
+			Message : "invalid method",
 		})
 	}
-
-	cartItems, err := database.GetCartitemsByCartsId(id)
-    cartResponse := database.ConvertIntoCartResponse(cartItems)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
-			"code":    400,
-			"status":  "fail",
-			"message": err.Error(),
-		})
-	}
-
-	// if len(cartItems)==0{
-	// 	return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
-	// 		"code":    404,
-	// 		"status": "fail",
-	// 		"message":  "CartItems not found",
-	// 	})
-	// }
-
-	res := map[string]interface{}{
-		"code":    200,
-		"status":  "success",
-		"message": "success get cartitems",
-		"data":    cartResponse,
-	}
-	return c.JSON(http.StatusOK, res)
 }
 
 func UpdateCartitemsController(c echo.Context) error {
@@ -156,9 +161,9 @@ func DeleteCartitemsController(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"code":    200,
-		"status":  "success",
-		"message": "cartitems succesfully deleted",
+	return c.JSON(http.StatusOK, models.SuccessResponse{
+		Code :    200,
+		Status:  "success",
+		Message: "cartitems succesfully deleted",
 	})
 }

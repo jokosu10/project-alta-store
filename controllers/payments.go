@@ -6,6 +6,7 @@ import (
 	"project-alta-store/lib/utils"
 	"project-alta-store/models"
 	"strconv"
+	"strings"
 
 	"github.com/labstack/echo"
 )
@@ -58,6 +59,8 @@ func UpdatePaymentsController(c echo.Context) error {
 	}
 	var post_body models.Payments_update
 
+	
+
 	if e := c.Bind(&post_body); e != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
 			"code":    400,
@@ -73,7 +76,14 @@ func UpdatePaymentsController(c echo.Context) error {
 			"message":  e.Error(),
 		})
 	}
-	
+	//check jika payment status bukan success / fail maka buang
+	if strings.ToLower(post_body.Payment_status) != "success" && strings.ToLower(post_body.Payment_status) != "fail"{
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]interface{}{
+			"code":    400,
+			"status" : "fail",
+			"message":  "payment_status must be either success or fail",
+		})
+	}
 
 	payment,e := database.GetPaymentById(id)
 	if  e != nil {
