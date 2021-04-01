@@ -35,10 +35,6 @@ func Start() *echo.Echo {
 	//Route Carts
 	jwtAuth.PUT("/carts/:id", controllers.UpdateCartsController)
 
-	// route auth
-	jwtAuth.POST("/register", controllers.RegisterCustomersController)
-	jwtAuth.POST("/login", controllers.LoginCustomersController)
-
 	//checkout items
 	jwtAuth.GET("/checkoutitems", controllers.GetCheckoutItemsController)
 
@@ -52,6 +48,11 @@ func Start() *echo.Echo {
 
 	// update profile
 	jwtAuth.PUT("/customers/:id", controllers.UpdateProfileCustomersController)
+
+	// without jwt for login and register
+	// route auth
+	e.POST("/register", controllers.RegisterCustomersController)
+	e.POST("/login", controllers.LoginCustomersController)
 
 	return e
 }

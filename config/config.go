@@ -37,24 +37,24 @@ func InitDB() {
 }
 
 func InitDBTest() {
-	var appConfig map[string]string
-	appConfig, err := godotenv.Read()
-	if err != nil {
-		fmt.Println("Error reading .env file")
-	}
+	// var appConfig map[string]string
+	// _, err := godotenv.Read()
+	// if err != nil {
+	// 	fmt.Println("Error reading .env file")
+	// }
 
-	mysqlCredentialsTest := fmt.Sprintf(
-		"%s:%s@%s(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		appConfig["MYSQL_USER_TEST"],
-		appConfig["MYSQL_PASSWORD_TEST"],
-		appConfig["MYSQL_PROTOCOL_TEST"],
-		appConfig["MYSQL_HOST_TEST"],
-		appConfig["MYSQL_PORT_TEST"],
-		appConfig["MYSQL_DBNAME_TEST"],
-	)
+	// mysqlCredentialsTest := fmt.Sprintf(
+	// 	"%s:%s@%s(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	// 	appConfig["MYSQL_USER_TEST"],
+	// 	appConfig["MYSQL_PASSWORD_TEST"],
+	// 	appConfig["MYSQL_PROTOCOL_TEST"],
+	// 	appConfig["MYSQL_HOST_TEST"],
+	// 	appConfig["MYSQL_PORT_TEST"],
+	// 	appConfig["MYSQL_DBNAME_TEST"],
+	// )
 
-	fmt.Println(mysqlCredentialsTest)
-	// mysqlCredentials = "root:@tcp(127.0.0.1:3306)/alterra_test?charset=utf8&parseTime=True&loc=Local"
+	mysqlCredentialsTest := "root:password@tcp(127.0.0.1:3306)/alterra_store_test?charset=utf8&parseTime=True&loc=Local"
+	var err error
 	DB, err = gorm.Open(mysql.Open(mysqlCredentialsTest), &gorm.Config{})
 
 	if err != nil {
@@ -64,8 +64,10 @@ func InitDBTest() {
 }
 
 func InitMigrateTest() {
+	DB.Migrator().DropTable(&models.Customers{})
 	DB.Migrator().DropTable(&models.Categories{})
 	DB.Migrator().DropTable(&models.Products{})
+	DB.AutoMigrate(&models.Customers{})
 	DB.AutoMigrate(&models.Categories{})
 	DB.AutoMigrate(&models.Products{})
 }
