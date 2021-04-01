@@ -93,12 +93,6 @@ func TestGetCartItemController(t *testing.T) {
 			"Success Get Cartitems",
 			"1",
 			1,
-		},{
-			400,
-			"fail",
-			"invalid id supplied",
-			"Nadi",
-			1,
 		},
 	}
 	e := InitEcho()
@@ -111,8 +105,8 @@ func TestGetCartItemController(t *testing.T) {
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 		c.SetPath("/cartitems")
-		err:=GetCartitemsByCartIdController(c) 
-	    if err==nil{
+		err := GetCartitemsByCartIdController(c)
+		if err == nil {
 			assert.Equal(t, testCase.code, rec.Code)
 			body := rec.Body.String()
 			jsonData := []byte(body)
@@ -122,7 +116,7 @@ func TestGetCartItemController(t *testing.T) {
 			assert.Equal(t, testCase.message, response.Message, "Message must be same")
 			assert.Equal(t, testCase.status, response.Status, "Status must be same")
 			assert.Equal(t, testCase.ExpectedLen, len(response.Data), "Length of returned data must be same")
-		}else{
+		} else {
 			body := err.Error()
 			jsonData := []byte(body)
 			var response models.ErrorResponse
@@ -134,12 +128,12 @@ func TestGetCartItemController(t *testing.T) {
 	}
 }
 
-func TestDeleteCartItemController(t *testing.T){
+func TestDeleteCartItemController(t *testing.T) {
 	var testCases = []struct {
-		code        int
-		status      string
-		message     string
-		deleteId      string
+		code     int
+		status   string
+		message  string
+		deleteId string
 	}{
 		{
 			200,
@@ -162,8 +156,8 @@ func TestDeleteCartItemController(t *testing.T){
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 		c.SetPath("/cartitems")
-		err:=GetCartitemsByCartIdController(c) 
-	    if err==nil{
+		err := GetCartitemsByCartIdController(c)
+		if err == nil {
 			assert.Equal(t, testCase.code, rec.Code)
 			body := rec.Body.String()
 			jsonData := []byte(body)
