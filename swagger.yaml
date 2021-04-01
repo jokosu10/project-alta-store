@@ -7,7 +7,7 @@ info:
   contact:
     email: ""
 host: ""
-basePath: "/v1"
+basePath: "/"
 consumes: [application/json]
 produces: [application/json]
 schemes:
@@ -114,42 +114,6 @@ paths:
           description: Successful update profile customers
           schema:
             $ref: '#/definitions/CustomersInfoUpdateProfileSuccess'
-        400:
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/DefaultCode400'
-        404:
-          description: Customer not found
-          schema:
-            $ref: '#/definitions/DefaultCode404'
-        500:
-          description: Server error
-          schema:
-            $ref: '#/definitions/DefaultCode500'
-  /customers/password/{customerId}:
-    put:
-      description: 'Edit password customers'
-      tags: [customers]
-      operationId: Edit password customers
-      consumes:
-        - "application/json"
-      parameters:
-        - name: 'id'
-          in: 'path'
-          required: true
-          description: 'Id customer for update profile'
-          type: integer
-        - in: "body"
-          name: "body"
-          description: "Updated customer object"
-          required: true
-          schema:
-            $ref: "#/definitions/CustomersPasswordInfo"
-      responses:
-        200:
-          description: Successful update password customers
-          schema:
-            $ref: '#/definitions/CustomersPasswordInfoSuccess'
         400:
           description: Bad Request
           schema:
