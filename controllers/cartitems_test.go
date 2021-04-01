@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"project-alta-store/config"
 	"project-alta-store/lib/database"
 	"project-alta-store/models"
 	"strings"
@@ -141,20 +140,18 @@ func TestDeleteCartItemController(t *testing.T){
 		status      string
 		message     string
 		deleteId      string
-		ExpectedLen int
 	}{
 		{
 			200,
 			"success",
 			"cartitems succesfully deleted",
 			"2",
-			3,
-		}, {
+		},
+		{
 			200,
 			"success",
 			"cartitems succesfully deleted",
 			"1",
-			2,
 		},
 	}
 	e := InitEcho()
@@ -175,8 +172,6 @@ func TestDeleteCartItemController(t *testing.T){
 			assert.Equal(t, testCase.code, response.Code, "Code must be same")
 			assert.Equal(t, testCase.message, response.Message, "Message must be same")
 			assert.Equal(t, testCase.status, response.Status, "Status must be same")
-			res := config.DB.Find(&models.Cartitems{}).RowsAffected
-			assert.Equal(t,testCase.ExpectedLen,res,"Length of item must be same")
 		}
 	}
 }
