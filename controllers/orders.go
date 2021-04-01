@@ -48,10 +48,10 @@ func CreateOrdersController(c echo.Context) error {
 			"message": err.Error(),
 		})
 	}
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"code":    200,
-		"status":  "success",
-		"message": "success insert order",
+	return c.JSON(http.StatusOK, models.SuccessResponse{
+		Code:    200,
+		Status:  "success",
+		Message: "success insert order",
 	})
 }
 
