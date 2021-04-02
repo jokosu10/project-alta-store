@@ -558,23 +558,21 @@ definitions:
       data:
         type: object
         properties:
+          id:
+            type: integer
+          email:
+            type: string
           token:
-            type: string
-          refreshToken:
-            type: string
-          expiredAt:
             type: string
   RegisterInfo:
     type: object
-    required: [username,email,password,confrim_password]
+    required: [username,email,password]
     properties:
       username:
         type: string
       email:
         type: string
       password:
-        type: string
-      confrim_password:
         type: string
   RegisterSuccess:
     type: object
@@ -590,16 +588,14 @@ definitions:
         properties:
   CustomersInfo:
     type: object
-    required: [province,city,address,zipcode,bank_name,bank_account_number]
+    required: [username,email,address,bank_name,bank_account_number]
     properties:
-      province:
+      username:
         type: string
-      city:
+      email:
         type: string
       address:
         type: string
-      zipcode:
-        type: integer
       bank_name:
         type: string
       bank_account_number:
@@ -616,14 +612,12 @@ definitions:
       data:
         type: object
         properties:
-          province:
+          username:
             type: string
-          city:
+          email:
             type: string
           address:
             type: string
-          zipcode:
-            type: integer
           bank_name:
             type: string
           bank_account_number:
